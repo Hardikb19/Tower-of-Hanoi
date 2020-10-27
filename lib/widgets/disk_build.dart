@@ -34,7 +34,8 @@ class _DiskBuildState extends State<DiskBuild> {
     int _currentRodId = widget.disk.currentRodId;
     double diskWidth;
     if (widget.disk.diskSize > 0) {
-      diskWidth = widget.disk.diskSize * MediaQuery.of(context).size.height/12;
+      diskWidth =
+          widget.disk.diskSize * MediaQuery.of(context).size.height / 12;
     } else {
       diskWidth = 0;
     }
@@ -76,16 +77,16 @@ class _DiskBuildState extends State<DiskBuild> {
             borderRadius: BorderRadius.circular(0),
             child: Container(
               decoration: BoxDecoration(
-              color: Colors.blueGrey,
-                 gradient: LinearGradient(
-                  colors: [
-                    Colors.blueGrey[100],
-                    Colors.blueGrey[200],
-                    Colors.blueGrey[300],
-                  ],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-              )),
+                  color: Colors.blueGrey,
+                  gradient: LinearGradient(
+                    colors: [
+                      Colors.blueGrey[100],
+                      Colors.blueGrey[200],
+                      Colors.blueGrey[300],
+                    ],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                  )),
               // color: Colors.deepOrange[300],
               height: diskWidth == 0 ? 0 : 20,
               width: diskWidth,
