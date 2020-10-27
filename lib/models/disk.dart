@@ -5,6 +5,8 @@ class Disk {
   final int currentRodId;
   bool draggable;
 
+  int get disknumber => diskSize;
+
   Disk(
       {@required this.diskSize,
       @required this.currentRodId,

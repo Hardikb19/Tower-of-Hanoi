@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import '../widgets/rod_build.dart';
 import '../models/rod.dart';
 import '../models/disk.dart';
-
+import '../data.dart';
 class GameScreen extends StatefulWidget {
   static List<Disk> list1 = [];
   static List<Disk> list2 = [];
@@ -12,6 +12,9 @@ class GameScreen extends StatefulWidget {
   static Rod rod1 = Rod(id: 1, disksList: list1);
   static Rod rod2 = Rod(id: 2, disksList: list2);
   static Rod rod3 = Rod(id: 3, disksList: list3);
+  static int level = 1;
+
+  static String organism;
 
   static int numberOfMoves = 0;
 
@@ -19,7 +22,7 @@ class GameScreen extends StatefulWidget {
 
   static Disk lastLeftDisk;
 
-  final int numberOfDisks;
+  int numberOfDisks;
 
   GameScreen(this.numberOfDisks){
     list1 = [];
@@ -37,6 +40,22 @@ class GameScreen extends StatefulWidget {
 }
 
 class _GameScreenState extends State<GameScreen> {
+
+  String name = '';
+  String level = GameScreen.level.toString();
+
+  onSwitch(int number){
+    setState(() {
+      name = data[GameScreen.organism]['lvl${GameScreen.level}']['discs'][number-1];
+      print(name);
+    });
+  }
+
+  onFinish(){
+    setState(() {
+      name = 'Please Restart level $level';
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Theme(
@@ -56,6 +75,7 @@ class _GameScreenState extends State<GameScreen> {
               icon: Icon(CupertinoIcons.refresh_bold,color: Colors.black87,),
               onPressed: (){
                 setState(() {
+                  name = '';
                   GameScreen.rod1.disksList = [];
                   for (int i = 0; i < widget.numberOfDisks; i++) {
                     GameScreen.rod1.disksList.add(
@@ -78,6 +98,18 @@ class _GameScreenState extends State<GameScreen> {
         body: Stack(
           alignment: Alignment.bottomCenter,
           children: <Widget>[
+            IgnorePointer(
+              child: AnimatedContainer(
+                duration: Duration(milliseconds: 1200),
+                child: Align(
+                  alignment: Alignment.topCenter,
+                  child: Padding(
+                    padding: EdgeInsets.all(10),
+                    child: Text(name, style: TextStyle(fontSize: 50, color: Colors.black.withOpacity(0.2))),
+                  ),
+                ),
+              ),
+            ),
             Container(
               color: Colors.black,
               height: MediaQuery.of(context).size.height - 300,
@@ -85,9 +117,9 @@ class _GameScreenState extends State<GameScreen> {
             Container(
               child: Row(
                 children: <Widget>[
-                  RodBuild(GameScreen.rod1, widget.numberOfDisks),
-                  RodBuild(GameScreen.rod2, widget.numberOfDisks),
-                  RodBuild(GameScreen.rod3, widget.numberOfDisks),
+                  RodBuild(GameScreen.rod1, widget.numberOfDisks, onSwitch, onFinish),
+                  RodBuild(GameScreen.rod2, widget.numberOfDisks, onSwitch, onFinish),
+                  RodBuild(GameScreen.rod3, widget.numberOfDisks, onSwitch, onFinish),
                 ],
               ),
             ),

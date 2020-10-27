@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
     SystemChrome.setEnabledSystemUIOverlays([]);
     SystemChrome.setPreferredOrientations(
         [DeviceOrientation.landscapeRight, DeviceOrientation.landscapeLeft]);
-    SystemChrome.setApplicationSwitcherDescription(ApplicationSwitcherDescription( label: 'Tower of Hanoi'));
+    //SystemChrome.setApplicationSwitcherDescription(ApplicationSwitcherDescription( label: 'Tower of Hanoi'));
     return MaterialApp(
       title: 'Tower of Hanoi',
       debugShowCheckedModeBanner: false,

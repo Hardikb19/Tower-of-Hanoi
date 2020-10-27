@@ -5,12 +5,15 @@ import '../screens/game_screen.dart';
 import '../models/rod.dart';
 import '../models/disk.dart';
 import '../widgets/disk_build.dart';
+import '../animations/pageTransition.dart';
 
 class RodBuild extends StatefulWidget {
   final Rod rod;
   final int numberOfDisks;
+  final Function(int) onSwitch;
+  final Function onFinish;
 
-  RodBuild(this.rod, this.numberOfDisks);
+  RodBuild(this.rod, this.numberOfDisks, this.onSwitch, this.onFinish);
   @override
   State<StatefulWidget> createState() {
     return _RodBuildState();
@@ -18,8 +21,6 @@ class RodBuild extends StatefulWidget {
 }
 
 class _RodBuildState extends State<RodBuild> {
-
-  
 
   @override
   void reassemble(){
@@ -54,7 +55,7 @@ class _RodBuildState extends State<RodBuild> {
     return DragTarget<Disk>(
       onAccept: (acceptedDisk) {
         RodControl.rod2 = widget.rod;
-        print('on accept rod : ${widget.rod.id}');
+        //print('on accept rod : ${widget.rod.id}');
         if (listD.length > 0) {
           if (acceptedDisk.diskSize < listD.last.diskSize &&
               listD.length <= widget.numberOfDisks) {
@@ -100,14 +101,15 @@ class _RodBuildState extends State<RodBuild> {
 
             reassemble();
           });
-          print('Rod${RodControl.rod1.id}:${RodControl.rod1.disksList}');
-          print('Rod${RodControl.rod2.id}:${RodControl.rod2.disksList}');
+          //print('Rod${RodControl.rod1.id}:${RodControl.rod1.disksList}');
+          //print('Rod${RodControl.rod2.id}:${RodControl.rod2.disksList}');
           setState(() {
             main();
           });
         }
-        print('length of the rod${widget.rod.id} is ${listD.length}');
+        //print('length of the rod${widget.rod.id} is ${listD.length}');
         if (widget.rod.id == 3 && listD.length == widget.numberOfDisks) {
+          widget.onFinish();
           showDialog(
             barrierDismissible: false,
               context: context,
@@ -126,16 +128,27 @@ class _RodBuildState extends State<RodBuild> {
                   actions: <Widget>[
                     FlatButton(
                       child: Text(
-                        'Replay',
+                        (GameScreen.level<3)?'Next Level':'Replay',
                         style: TextStyle(color: Colors.black),
                       ),
                       onPressed: () {
+                          int newNumber = 7;
+                        
+                          if(GameScreen.level<3){
+                            GameScreen.level++;
+                            newNumber = GameScreen.level*2+1;
+                          }
                         setState(() {
                           GameScreen.rod1.disksList = widget.rod.disksList;
                           widget.rod.disksList = [];
                           main();
                         });
-                        Navigator.of(context).pop();
+                        Navigator.pop(context);
+                        Navigator.of(context).pushReplacement(slideRoute(
+                          page: GameScreen(newNumber),
+                          beginOffset: Offset(0, 1),
+                          endOffset: Offset.zero,
+                          animateCurve: Curves.bounceInOut));
                       },
                     )
                   ],
@@ -158,13 +171,14 @@ class _RodBuildState extends State<RodBuild> {
           });
           if (listD.length > 0) listD.last.draggable = true;
         }
+        widget.onSwitch(l1.diskSize);
       },
       onWillAccept: (hoveringDisk) {
         return true;
       },
       builder: (BuildContext context, List<Disk> candidateData, rejectedData) {
-        print(rejectedData);
-        print(candidateData);
+        //print(rejectedData);
+        //print(candidateData);
         return Container(
           height: MediaQuery.of(context).size.height,
           width: deviceWidth / 3,
