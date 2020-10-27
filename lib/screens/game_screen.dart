@@ -41,18 +41,23 @@ class GameScreen extends StatefulWidget {
 
 class _GameScreenState extends State<GameScreen> {
 
+  List<String> inserts = [];
+
   String name = '';
   String level = GameScreen.level.toString();
+  Color color = Colors.black.withOpacity(0.2);
 
   onSwitch(int number){
     setState(() {
-      name = data[GameScreen.organism]['lvl${GameScreen.level}']['discs'][number-1];
-      print(name);
+      inserts.insert(0, data[GameScreen.organism]['lvl${GameScreen.level}']['discs'][number-1]);
+      print(inserts[0]);
     });
   }
 
   onFinish(){
     setState(() {
+      inserts.clear();
+      color = Colors.green;
       name = 'Please Restart level $level';
     });
   }
@@ -87,7 +92,6 @@ class _GameScreenState extends State<GameScreen> {
                     );
                   }
                   GameScreen.rod2.disksList = [];
-                  
                   GameScreen.rod3.disksList = [];
                 });
               },
@@ -105,7 +109,19 @@ class _GameScreenState extends State<GameScreen> {
                   alignment: Alignment.topCenter,
                   child: Padding(
                     padding: EdgeInsets.all(10),
-                    child: Text(name, style: TextStyle(fontSize: 50, color: Colors.black.withOpacity(0.2))),
+                    child: Column(
+                      children: List.generate(data[GameScreen.organism]['lvl${GameScreen.level}']['discs'].length, (index){
+                        String org = '';
+                        try{
+                          org = inserts[index];
+                          
+                        }catch(e){
+                          org = '';
+                        }
+                        return Text(org, style: TextStyle(fontSize: (50 -5.0*index), color: color));
+                      }
+                      ),
+                    ),
                   ),
                 ),
               ),

@@ -55,6 +55,7 @@ class _RodBuildState extends State<RodBuild> {
     return DragTarget<Disk>(
       onAccept: (acceptedDisk) {
         RodControl.rod2 = widget.rod;
+            widget.onSwitch(acceptedDisk.diskSize);
         //print('on accept rod : ${widget.rod.id}');
         if (listD.length > 0) {
           if (acceptedDisk.diskSize < listD.last.diskSize &&
@@ -109,9 +110,11 @@ class _RodBuildState extends State<RodBuild> {
         }
         //print('length of the rod${widget.rod.id} is ${listD.length}');
         if (widget.rod.id == 3 && listD.length == widget.numberOfDisks) {
+          Future.delayed(Duration(seconds: 2),(){
+            
           widget.onFinish();
           showDialog(
-            barrierDismissible: false,
+            barrierDismissible: true,
               context: context,
               builder: (ctx) {
                 return AlertDialog(
@@ -154,6 +157,7 @@ class _RodBuildState extends State<RodBuild> {
                   ],
                 );
               });
+          });
         }
         setState(() {
             main();
@@ -171,7 +175,6 @@ class _RodBuildState extends State<RodBuild> {
           });
           if (listD.length > 0) listD.last.draggable = true;
         }
-        widget.onSwitch(l1.diskSize);
       },
       onWillAccept: (hoveringDisk) {
         return true;
